@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+}
+
+.App-Container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1.App-title {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+p.App-description {
+    width: 534px;
+    text-align: center;
+}
+
+img.App-logo {
+    width: 500px;
+    height: auto;
+}

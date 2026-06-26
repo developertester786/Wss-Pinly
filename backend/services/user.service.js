@@ -1,5 +1,3 @@
-const bcrypt = require("bcrypt");
-
 const { User, Role } = require("../models");
 
 const ApiError = require("../utils/ApiError");
@@ -81,11 +79,6 @@ const createUser = async (data) => {
     }
   }
 
-  // Hash Password
-  if (data.password) {
-    data.password = await bcrypt.hash(data.password, 10);
-  }
-
   return await User.create(data);
 };
 
@@ -141,11 +134,6 @@ const updateUser = async (id, data) => {
         MESSAGES.EMAIL_ALREADY_EXISTS
       );
     }
-  }
-
-  // Hash Password
-  if (data.password) {
-    data.password = await bcrypt.hash(data.password, 10);
   }
 
   await user.update(data);

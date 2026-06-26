@@ -36,6 +36,19 @@ const verifyOTP = asyncHandler(async (req, res) => {
     );
 });
 
+const login = asyncHandler(async (req, res) => {
+  const result = await authService.login(req.body);
+
+  return res
+    .status(HTTP_STATUS.OK)
+    .json(
+      ApiResponse.success(
+        MESSAGES.LOGIN_SUCCESS,
+        result
+      )
+    );
+});
+
 const getProfile = asyncHandler(async (req, res) => {
   const user = await authService.getProfile(req.user.id);
 
@@ -52,5 +65,6 @@ const getProfile = asyncHandler(async (req, res) => {
 module.exports = {
   sendOTP,
   verifyOTP,
+  login,
   getProfile,
 };

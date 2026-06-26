@@ -1,7 +1,7 @@
 "use strict";
 
 const { Model } = require("sequelize");
-
+const bcrypt = require("bcryptjs");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
@@ -91,6 +91,26 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
       tableName: "Users",
       timestamps: true,
+
+hooks: {
+  beforeCreate: async (user) => {
+    console.log("Before hash:", user.password);
+
+    user.password = await bcrypt.hash(user.password, 10);
+
+    console.log("After hash:", user.password);
+  },
+
+  beforeUpdate: async (user) => {
+    if (user.changed("password")) {
+      console.log("Before update hash:", user.password);
+
+      user.password = await bcrypt.hash(user.password, 10);
+
+      console.log("After update hash:", user.password);
+    }
+  },
+},
     }
   );
 

@@ -1,5 +1,5 @@
 const { User, Role } = require("../models");
-
+const bcrypt = require("bcryptjs");
 const ApiError = require("../utils/ApiError");
 const { generateOTP } = require("../utils/otp");
 const { generateToken } = require("../utils/jwt");
@@ -124,32 +124,99 @@ const verifyOTP = async ({ mobile, otp }) => {
     };
 };
 
-const getProfile = async (userId) => {
-  const user = await User.findByPk(userId, {
-    attributes: {
-      exclude: ["password", "otp", "otpExpiry"],
-    },
-    include: [
-      {
-        model: Role,
-        as: "role",
-        attributes: ["id", "name"],
-      },
-    ],
-  });
 
-  if (!user) {
-    throw new ApiError(
-      HTTP_STATUS.NOT_FOUND,
-      MESSAGES.USER_NOT_FOUND
+const login = async ({ email, password }) => {
+    console.log("Login Email:", email);
+
+    const user = await User.findOne({
+        where: { email },
+        include: [{
+            model: Role,
+            as: "role",
+            attributes: ["id", "name"],
+        }],
+    });
+
+    console.log("User Found:", !!user);
+
+    if (!user) {
+        throw new ApiError(
+            HTTP_STATUS.UNAUTHORIZED,
+            MESSAGES.INVALID_CREDENTIALS
+        );
+    }
+
+    console.log("Entered Password:", password);
+    console.log("DB Password:", user.password);
+
+    const isPasswordValid = await bcrypt.compare(
+        password,
+        user.password
     );
-  }
 
-  return user;
+    console.log("Password Match:", isPasswordValid);
+
+    if (!isPasswordValid) {
+        throw new ApiError(
+            HTTP_STATUS.UNAUTHORIZED,
+            MESSAGES.INVALID_CREDENTIALS
+        );
+    }
+
+    console.log("Role Name:", user.role.name);
+
+    if (
+        ![
+            ROLES.ADMIN,
+            ROLES.STAFF,
+            ROLES.BUSINESS,
+        ].includes(user.role.name)
+    ) {
+        throw new ApiError(
+            HTTP_STATUS.FORBIDDEN,
+            MESSAGES.UNAUTHORIZED
+        );
+    }
+
+    const token = generateToken({
+        id: user.id,
+        roleId: user.roleId,
+    });
+
+    return {
+        token,
+        user,
+    };
+};
+
+const getProfile = async (userId) => {
+    const user = await User.findByPk(userId, {
+        attributes: {
+            exclude: ["password", "otp", "otpExpiry"],
+        },
+        include: [
+            {
+                model: Role,
+                as: "role",
+                attributes: ["id", "name"],
+            },
+        ],
+    });
+
+    if (!user) {
+        throw new ApiError(
+            HTTP_STATUS.NOT_FOUND,
+            MESSAGES.USER_NOT_FOUND
+        );
+    }
+
+    return user;
 };
 
 module.exports = {
     sendOTP,
     verifyOTP,
+    login,
     getProfile,
+
 };

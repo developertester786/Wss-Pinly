@@ -78,7 +78,7 @@ const deleteRole = async (id) => {
 
   const defaultRoles = [
     ROLES.ADMIN,
-    ROLES.BUSINESS_OWNER,
+    ROLES.BUSINESS,
     ROLES.CUSTOMER,
   ];
 

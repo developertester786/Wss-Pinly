@@ -47,7 +47,7 @@ const authenticate = async (req, res, next) => {
 
     // Attach user to request
     req.user = user;
-
+   console.log("Authenticated User:", req.user);s
     next();
   } catch (error) {
     next(error);

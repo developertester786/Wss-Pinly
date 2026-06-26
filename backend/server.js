@@ -6,7 +6,7 @@ const roleRoutes = require("./routes/role.routes");
 const userRoutes = require("./routes/user.routes");
 const errorHandler = require("./middleware/error.middleware");
 const authRoutes = require("./routes/auth.routes");
-
+const businessRoutes = require("./routes/business.routes");
 const app = express();
 
 // Middleware
@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 app.use("/api/roles", roleRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
-
+app.use("/api/businesses", businessRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

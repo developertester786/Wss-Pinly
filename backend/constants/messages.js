@@ -39,5 +39,13 @@ const MESSAGES = {
     TOKEN_REQUIRED: "Token is required.",
     TOKEN_INVALID: "Invalid or expired token.",
     PROFILE_FETCHED: "Profile fetched successfully.",
+
+    BUSINESS_CREATED: "Business created successfully.",
+    BUSINESS_UPDATED: "Business updated successfully.",
+    BUSINESS_DELETED: "Business deleted successfully.",
+    BUSINESS_FETCHED: "Business fetched successfully.",
+    BUSINESSES_FETCHED: "Businesses fetched successfully.",
+    BUSINESS_NOT_FOUND: "Business not found.",
+    BUSINESS_ALREADY_EXISTS: "Business already exists for this user.",
 };
 module.exports = MESSAGES;

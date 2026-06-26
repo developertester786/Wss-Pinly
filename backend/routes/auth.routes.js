@@ -5,7 +5,6 @@ const router = express.Router();
 const authController = require("../controllers/auth.controller");
 const authenticate = require("../middleware/auth.middleware");
 
-
 router.post(
   "/send-otp",
   authController.sendOTP
@@ -16,12 +15,15 @@ router.post(
   authController.verifyOTP
 );
 
+router.post(
+  "/login",
+  authController.login
+);
+
 router.get(
   "/me",
   authenticate,
   authController.getProfile
 );
-
-
 
 module.exports = router;

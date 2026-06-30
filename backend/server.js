@@ -7,15 +7,27 @@ const userRoutes = require("./routes/user.routes");
 const errorHandler = require("./middleware/error.middleware");
 const authRoutes = require("./routes/auth.routes");
 const businessRoutes = require("./routes/business.routes");
+const path = require('path');
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/public',express.static(path.join(__dirname, "public")));
+//var expressLayouts = require('express-ejs-layouts');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+//app.use(expressLayouts);
 
 // Routes
-app.get("/", (req, res) => {
-  res.send("Pinly Backend Running...");
+app.get('/', function(req, res)
+{
+      res.render('Auth/login',{
+            title: 'Login',
+            session: '',
+            errors: '',
+            error: ''
+      });
 });
 
 app.use("/api/roles", roleRoutes);

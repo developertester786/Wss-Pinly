@@ -54,12 +54,7 @@ cd Wss-Pinly
 Navigate to the frontend folder:
 
 ```bash
-cd frontend/pinly
-```
-
-Install dependencies:
-
-```bash
+cd frontend
 npm install
 ```
 

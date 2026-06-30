@@ -36,7 +36,7 @@ cd Wss-Pinly
 ## Frontend Setup
 
 ```bash
-cd frontend/pinly
+cd frontend
 npm install
 npm start
 ```

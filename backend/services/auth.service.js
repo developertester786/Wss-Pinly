@@ -10,6 +10,9 @@ const {
     STATUS,
 } = require("../constants");
 
+const crypto = require("crypto");
+const sendMail = require("../utils/mail");
+
 const sendOTP = async ({ mobile }) => {
     // Check if user already exists
     let user = await User.findOne({
@@ -126,7 +129,6 @@ const verifyOTP = async ({ mobile, otp }) => {
 
 
 const login = async ({ email, password }) => {
-    console.log("Login Email:", email);
 
     const user = await User.findOne({
         where: { email },
@@ -137,7 +139,6 @@ const login = async ({ email, password }) => {
         }],
     });
 
-    console.log("User Found:", !!user);
 
     if (!user) {
         throw new ApiError(
@@ -146,15 +147,12 @@ const login = async ({ email, password }) => {
         );
     }
 
-    console.log("Entered Password:", password);
-    console.log("DB Password:", user.password);
 
     const isPasswordValid = await bcrypt.compare(
         password,
         user.password
     );
 
-    console.log("Password Match:", isPasswordValid);
 
     if (!isPasswordValid) {
         throw new ApiError(
@@ -163,7 +161,6 @@ const login = async ({ email, password }) => {
         );
     }
 
-    console.log("Role Name:", user.role.name);
 
     if (
         ![
@@ -213,10 +210,125 @@ const getProfile = async (userId) => {
     return user;
 };
 
+const forgotPassword = async (email) => {
+
+    const user = await User.findOne({
+        where: { email }
+    });
+
+    if (!user) {
+        throw new ApiError(
+            HTTP_STATUS.NOT_FOUND,
+            "No account found with this email."
+        );
+    }
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    const hashedToken = crypto
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex");
+
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = new Date(
+        Date.now() + 15 * 60 * 1000
+    );
+
+    await user.save();
+
+    const resetLink =
+        `${process.env.APP_URL}/reset-password/${resetToken}`;
+
+    await sendMail({
+        to: user.email,
+        subject: "Reset Password",
+        html: `
+            <h2>Reset Your Password</h2>
+
+            <p>Hello ${user.fullName},</p>
+
+            <p>Click the button below to reset your password.</p>
+
+            <a
+                href="${resetLink}"
+                style="
+                    display:inline-block;
+                    padding:12px 24px;
+                    background:#6f42c1;
+                    color:#fff;
+                    text-decoration:none;
+                    border-radius:5px;
+                ">
+                Reset Password
+            </a>
+
+            <p>This link expires in 15 minutes.</p>
+
+            <p>If you didn't request this, ignore this email.</p>
+        `,
+    });
+
+    return true;
+};
+
+const resetPassword = async (
+    token,
+    password,
+    confirmPassword
+) => {
+
+    if (password !== confirmPassword) {
+        throw new ApiError(
+            HTTP_STATUS.BAD_REQUEST,
+            "Passwords do not match."
+        );
+    }
+
+ const hashedToken = crypto
+  .createHash("sha256")
+  .update(token)
+  .digest("hex");
+
+const user = await User.findOne({
+  where: {
+    resetPasswordToken: hashedToken,
+  },
+});
+
+    if (!user) {
+        throw new ApiError(
+            HTTP_STATUS.BAD_REQUEST,
+            "Invalid reset link."
+        );
+    }
+
+   if (
+    !user.resetPasswordExpires ||
+    user.resetPasswordExpires < new Date()
+) {
+    throw new ApiError(
+        HTTP_STATUS.BAD_REQUEST,
+        "Reset link has expired."
+    );
+}
+
+    // beforeUpdate hook will hash it automatically
+    user.password = password;
+
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+
+    await user.save();
+
+    return true;
+};
+
 module.exports = {
     sendOTP,
     verifyOTP,
     login,
+    forgotPassword,
+    resetPassword,
     getProfile,
 
 };

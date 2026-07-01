@@ -1,5 +1,4 @@
 const { User, Role } = require("../models");
-
 const { verifyToken } = require("../utils/jwt");
 const ApiError = require("../utils/ApiError");
 
@@ -10,21 +9,32 @@ const {
 
 const authenticate = async (req, res, next) => {
   try {
+    let token = null;
+
+    // 1. Check Authorization Header
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    }
+
+    // 2. If no header, check HTTP-only Cookie
+    if (!token && req.cookies?.token) {
+      token = req.cookies.token;
+    }
+
+    // 3. If token not found
+    if (!token) {
       throw new ApiError(
         HTTP_STATUS.UNAUTHORIZED,
         MESSAGES.UNAUTHORIZED
       );
     }
 
- 
-    const token = authHeader.split(" ")[1];
-
-
+    // 4. Verify JWT
     const decoded = verifyToken(token);
 
+    // 5. Find User
     const user = await User.findByPk(decoded.id, {
       attributes: {
         exclude: ["password", "otp", "otpExpiry"],
@@ -45,9 +55,10 @@ const authenticate = async (req, res, next) => {
       );
     }
 
-    // Attach user to request
     req.user = user;
-   console.log("Authenticated User:", req.user);s
+
+    console.log("Authenticated User:", req.user);
+
     next();
   } catch (error) {
     next(error);

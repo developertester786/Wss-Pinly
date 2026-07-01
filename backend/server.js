@@ -13,6 +13,7 @@ const optionalAuthenticate = require("./middleware/optionalAuth.middleware");
 const { User } = require("./models");
 const crypto = require("crypto");
 const path = require('path');
+const userController = require("./controllers/user.controller");
 const app = express();
 
 // Middleware
@@ -34,6 +35,7 @@ app.get("/", optionalAuthenticate, (req, res) => {
   }
 
   res.render("Auth/login", {
+    user: "",  
     title: "Login",
     session: {},
     success: "",
@@ -51,6 +53,8 @@ app.get("/logout", (req, res) => {
     return res.redirect("/");
 
 });
+
+app.get("/users", authenticate, userController.listUsers);
 
 app.get(
   "/dashboard",
@@ -126,6 +130,12 @@ app.get("/reset-password/:token", async (req, res) => {
   }
 });
 
+
+
+app.get("/users/add", authenticate, userController.showAddUser);
+app.post("/users/add", authenticate, userController.storeUser);
+app.get("/users/edit/:id", authenticate, userController.showEditUser);
+app.post("/users/edit/:id", authenticate, userController.updateUserView);
 app.use("/api/roles", roleRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);

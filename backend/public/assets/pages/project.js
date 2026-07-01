@@ -101,7 +101,7 @@ function initializeDropzonePlans(index_val){
                 var $this = this;
                 
                 if(plansdropzone["plan_"+index_val].getQueuedFiles().length <= 1 && plansdropzone["plan_"+index_val].files[0].status == Dropzone.SUCCESS){
-                    console.log('Plan media uploaded successfully');
+                   
                 } else {
                     $this.removeFile($this.files[0]);
                 }

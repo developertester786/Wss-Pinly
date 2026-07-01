@@ -37,16 +37,17 @@ const verifyOTP = asyncHandler(async (req, res) => {
 });
 
 const login = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const result = await authService.login(req.body);
 
-  return res
-    .status(HTTP_STATUS.OK)
-    .json(
-      ApiResponse.success(
-        MESSAGES.LOGIN_SUCCESS,
-        result
-      )
-    );
+res.cookie("token", result.token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict",
+  maxAge: 24 * 60 * 60 * 1000,
+});
+
+return res.redirect("/dashboard");
 });
 
 const getProfile = asyncHandler(async (req, res) => {

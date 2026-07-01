@@ -8,24 +8,24 @@
         <meta content="Admin Dashboard" name="description" />
         <meta content="Themesbrand" name="author" />
 
-         <% include ./Partials/HeaderStyle  %>
+         <%- include ('./Partials/HeaderStyle')  %>
         
     </head>
     <body>
       <div id="wrapper">
-        <% if (session.loggedin) {%>
-          <% include ./Partials/Header  %>
-          <% include ./Partials/Sidebar  %>
+        <% if (user.isVerified) {%>
+          <%- include ('./Partials/Header')  %>
+          <%- include ('./Partials/Sidebar')  %>
         <% } %>
-        <% if (session.loggedin) {%>
-          <% include ./Partials/FooterScript  %>
+        <% if (user.isVerified) {%>
+          <%- include ('./Partials/FooterScript')  %>
         <% } %>
         <div class="content-page">
         <%- body %>
         </div>
         <link href="/public/assets/css/admin-style.css" rel="stylesheet" type="text/css">
-        <% if (session.loggedin) {%>
-          <% include ./Partials/Footer %>
+        <% if (user.isVerified) {%>
+          <%- include ('./Partials/Footer') %>
         <% } %>
       </div>
       <!-- App js -->

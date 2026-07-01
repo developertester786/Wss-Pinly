@@ -100,7 +100,7 @@
                                 </a>
                                 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <% if(session.user.role != 'staff'){ %>
+                                    <% if(user.role.name != 'Staff'){ %>
                                         <a class="dropdown-item" href="/user">Add User</a>
                                     <% } %>
                                     <a class="dropdown-item" href="/property">Add Property</a>

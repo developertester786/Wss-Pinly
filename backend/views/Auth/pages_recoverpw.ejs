@@ -15,11 +15,11 @@
                             Enter your Email and instructions will be sent to you!
                         </div>
 
-                        <form class="form-horizontal m-t-30" action="index.html">
+                        <form class="form-horizontal mt-30" action="/api/auth/forgot-password" method="POST">
                             <div class="form-group">
                                 <label for="useremail">Email</label>
-                                <input type="email" class="form-control" id="useremail" placeholder="Enter email">
-                            </div>
+                                 <input type="email" class="form-control" id="useremail" name="email" placeholder="Enter email" required>   
+                         </div>
 
                             <div class="form-group row m-t-20">
                                 <div class="col-12 text-right">

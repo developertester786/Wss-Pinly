@@ -6,12 +6,25 @@ const authorize = require("../middleware/authorize.middleware");
 const { ROLES } = require("../constants");
 const userController = require("../controllers/user.controller");
 
+// View Routes
+router.get("/listing", authenticate, userController.listUsers);
+
+router.get("/add", authenticate, userController.showAddUser);
+
+router.post("/add", authenticate, userController.storeUser);
+
+router.get("/edit/:id", authenticate, userController.showEditUser);
+
+router.post("/edit/:id", authenticate, userController.updateUserView);
+
 router.get(
   "/",
   authenticate,
   authorize(ROLES.ADMIN),
   userController.getUsers
 );
+
+router.get("/listing", authenticate, userController.listUsers);
 router.get(
   "/:id",
   authenticate,

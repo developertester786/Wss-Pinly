@@ -85,6 +85,15 @@ module.exports = (sequelize, DataTypes) => {
         ),
         defaultValue: "ACTIVE",
       },
+      resetPasswordToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+      resetPasswordExpires: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       sequelize,
@@ -94,20 +103,16 @@ module.exports = (sequelize, DataTypes) => {
 
 hooks: {
   beforeCreate: async (user) => {
-    console.log("Before hash:", user.password);
 
     user.password = await bcrypt.hash(user.password, 10);
 
-    console.log("After hash:", user.password);
   },
 
   beforeUpdate: async (user) => {
     if (user.changed("password")) {
-      console.log("Before update hash:", user.password);
-
+     
       user.password = await bcrypt.hash(user.password, 10);
 
-      console.log("After update hash:", user.password);
     }
   },
 },

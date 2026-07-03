@@ -1,7 +1,4 @@
   
-  <%- contentFor('HeaderCss') %>     
-    
-  <%- contentFor('body') %>
   <link href="/public/plugins/sweet-alert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
   <!-- Start content -->
                 <div class="content">
@@ -12,7 +9,7 @@
                                 <div class="page-title-box">
                                     <h4 class="page-title"><%= title %></h4>
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="javascript:void(0);">The Land Cart</a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:void(0);">Pinly</a></li>
                                         <li class="breadcrumb-item active"><%= title %></li>
                                     </ol>
             
@@ -26,38 +23,14 @@
                                 <div class="card m-b-20">
                                     <div class="card-body">
                                         <p class="text-muted m-b-30">
-                                            <% if(session.user.role != 'staff'){ %>
-                                                <a title="Add User" class="btn btn-outline-secondary" href="/user"><i class="fas fa-plus"></i> Add User</a>
-                                            <% } %>
-                                            
-                                            <div class="custom-filter">
-                                                <label class="w-100">Filter By:
-                                                    <select name="filter_by" id="filter_by" class="form-control form-control-sm form-select form-select-sm" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-                                                        <option value="/users" <%= search == '' ? 'selected="selected"' : '' %>>All</option>
-                                                        <option value="/users?search=staff" <%= search =='staff' ? 'selected="selected"' : '' %>>Staff Member</option>
-                                                        <option value="/users?search=agent" <%= search =='agent' ? 'selected="selected"' : '' %>>Agent</option>
-                                                        <option value="/users?search=administrator" <%= search =='administrator' ? 'selected="selected"' : '' %>>Administrator</option>
-                                                        <option value="/users?search=customer" <%= search =='customer' ? 'selected="selected"' : '' %>>Customer</option>
-                                                    </select>
-                                                    <div class="d-flex list-inline float-right mb-0">
-                                                        <div class="app-search mt-0">
-                                                            <div class="form-group mb-0"> 
-                                                                <input type="text" class="form-control" placeholder="Search.." id="tb_search" value="<%= ['staff','agent','administrator','customer'].includes(search) ? '' : search %>">
-                                                                <button type="button" id="searchterm"><i class="fa fa-search"></i></button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </label>
-                                            </div>
+                                            <a title="Add Category" class="btn btn-outline-secondary" href="/add-category"><i class="fas fa-plus"></i> Add Category</a>
                                         </p>
 
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                                 <tr>
                                                     <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Role</th>
-                                                    <th>Status</th>
+                                                    <th>Slug</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -132,8 +105,5 @@
                 </div> <!-- content -->
                 <!-- Required datatable js -->
                 <script src="/public/plugins/sweet-alert2/sweetalert2.min.js"></script>
-                <script src="/public/assets/pages/users.js"></script>
-
-                <%- contentFor('FooterJs') %>
-
+                <script src="/public/assets/pages/categories.js"></script>
                  

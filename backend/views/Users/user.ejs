@@ -15,7 +15,6 @@
                             <li class="breadcrumb-item"><a href="javascript:void(0);">The Land Cart</a></li>
                             <li class="breadcrumb-item active"><%= title %></li>
                         </ol>
-                        <%- include(viewsDir+'/Partials/TinyCharts') %>
                     </div>
                 </div>
             </div>
@@ -26,16 +25,6 @@
                         <div class="card directory-card m-b-20">
                             <div>
                                 <form id="add_new_user" name="add_new_user" class="form-horizontal" action="/user" method="POST">
-                                    <div class="directory-bg text-center">
-                                        <div class="directory-overlay">
-                                                <span id="imageuploader">
-                                                    <input name="profileimg" id="profileimg" type="hidden" value="<%= userData && userData.image !== null && userData.image != '' ? userData.image : '' %>">
-                                                    <input type="hidden" name="frm_id" id="frm_id" value="<%= userData ? userData.uid : 0 %>"/>
-                                                    <img id="ws_user_avatar" class="rounded-circle thumb-lg img-thumbnail dropzone" data-thumb="/public/assets/images/users/user.png" src="<%= userData && userData.image !== null && userData.image != '' ? '/uploads/users/'+userData.image : '/public/assets/images/users/user.png' %>" alt="Generic placeholder image">
-                                                    <a href="javascript:void(0)" id="remove_img">x</a>
-                                                </span>
-                                        </div>
-                                    </div>
                                     <div class="directory-content p-4">
                                         <div class="mt-4">
                                             <% if(success != "") {%> 
@@ -51,8 +40,8 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="mb-3">
-                                                        <label class="form-label" for="email">Email Address</label>
-                                                        <input type="email" class="form-control" name="email" id="email" placeholder="Email Address" data-key="Email Address" autocomplete="off" autofill="false" value="<%= userData  ? userData.email : '' %>">
+                                                        <label class="form-label" for="name">Name</label>
+                                                        <input type="text" class="form-control" name="name" id="name" placeholder="Name" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -60,14 +49,14 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <label class="form-label" for="fname">First Name</label>
-                                                        <input type="text" class="form-control" name="fname" id="fname" placeholder="First Name" data-key="First Name" autocomplete="off" autofill="false" value="<%= userData  ? userData.fname : '' %>">
+                                                        <label class="form-label" for="slug">Slug</label>
+                                                        <input type="text" class="form-control" name="slug" id="slug" placeholder="Slug" value="">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <label class="form-label" for="lname">Last Name</label>
-                                                        <input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name" data-key="Last Name" autocomplete="off" autofill="false" value="<%= userData  ? userData.lname : '' %>">
+                                                        <label class="form-label" for="parent">Parent</label>
+                                                        <select class="form-control" id="parent" name="parent"></select>
                                                     </div>
                                                 </div>
                                             </div>

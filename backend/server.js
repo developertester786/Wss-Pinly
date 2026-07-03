@@ -8,9 +8,12 @@ const errorHandler = require("./middleware/error.middleware");
 const authRoutes = require("./routes/auth.routes");
 const businessRoutes = require("./routes/business.routes");
 const cookieParser = require("cookie-parser");
-const authenticate = require("./middleware/auth.middleware");
+const appLocals = require("./app.locals");
+const Backendrouter = require("./routes/Backendrouter");
 const path = require('path');
 const app = express();
+
+app.locals = appLocals;
 
 // Middleware
 app.use(cors());
@@ -23,28 +26,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 
-// Routes
-app.get('/', function(req, res)
-{
-      res.render('Auth/login',{
-            title: 'Login',
-            session: '',
-            errors: '',
-            error: ''
-      });
-});
-
-app.get(
-  "/dashboard",
-  authenticate,
-  (req, res) => {
-    res.render("Dashboard/dashboard", {
-      title: "Dashboard",
-      user: req.user,
-    });
-  }
-);
-
+// Add Authentication Route file with app
+app.use('/', Backendrouter); 
 app.use("/api/roles", roleRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);

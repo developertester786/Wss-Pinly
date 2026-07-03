@@ -232,73 +232,74 @@
             </div>
         </div>
 
-        <script src="/public/plugins/sweet-alert2/sweetalert2.min.js"></script>
+        <!-- <script src="/public/plugins/sweet-alert2/sweetalert2.min.js"></script> -->
 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
 
-document.querySelectorAll(".delete-user").forEach(button => {
+            document.querySelectorAll(".delete-user").forEach(button => {
 
-    button.addEventListener("click", function () {
+                button.addEventListener("click", function () {
 
-        const userId = this.dataset.id;
-
-        Swal.fire({
-            title: "Delete User?",
-            text: "This action cannot be undone.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, Delete",
-            cancelButtonText: "Cancel",
-            confirmButtonColor: "#d33"
-        }).then(async (result) => {
-
-            if (!result.isConfirmed) return;
-
-            try {
-
-                const response = await fetch(`/api/users/${userId}`, {
-                    method: "DELETE",
-                    credentials: "include"
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-
-                    await Swal.fire({
-                        icon: "success",
-                        title: "Deleted!",
-                        text: data.message
-                    });
-
-                    location.reload();
-
-                } else {
+                    const userId = this.dataset.id;
 
                     Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: data.message
+                        title: "Delete User?",
+                        text: "This action cannot be undone.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, Delete",
+                        cancelButtonText: "Cancel",
+                        confirmButtonColor: "#d33"
+                    }).then(async (result) => {
+
+                        if (!result.isConfirmed) return;
+
+                        try {
+
+                            const response = await fetch(`/api/users/${userId}`, {
+                                method: "DELETE",
+                                credentials: "include"
+                            });
+
+                            const data = await response.json();
+
+                            if (response.ok && data.success) {
+
+                                await Swal.fire({
+                                    icon: "success",
+                                    title: "Deleted!",
+                                    text: data.message
+                                });
+
+                                location.reload();
+
+                            } else {
+
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: data.message
+                                });
+
+                            }
+
+                        } catch (err) {
+
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: "Something went wrong."
+                            });
+
+                        }
+
                     });
 
-                }
-
-            } catch (err) {
-
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "Something went wrong."
                 });
 
-            }
+            });
 
-        });
-
-    });
-
-});
-
-</script>
-
+        </script>
+        
         <%- contentFor('FooterJs') %>

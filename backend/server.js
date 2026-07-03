@@ -10,6 +10,8 @@ const businessRoutes = require("./routes/business.routes");
 const cookieParser = require("cookie-parser");
 const appLocals = require("./app.locals");
 const Backendrouter = require("./routes/Backendrouter");
+const { User } = require("./models");
+const crypto = require("crypto");
 const path = require('path');
 const app = express();
 
@@ -28,6 +30,8 @@ app.use(expressLayouts);
 
 // Add Authentication Route file with app
 app.use('/', Backendrouter); 
+// Routes
+
 app.use("/api/roles", roleRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);

@@ -37,17 +37,39 @@ const verifyOTP = asyncHandler(async (req, res) => {
 });
 
 const login = asyncHandler(async (req, res) => {
-  console.log(req.body);
-  const result = await authService.login(req.body);
+  try {
+    const { rememberMe } = req.body;
 
-res.cookie("token", result.token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "strict",
-  maxAge: 24 * 60 * 60 * 1000,
-});
+    const result = await authService.login(req.body);
 
-return res.redirect("/dashboard");
+    // Remove any existing cookie first
+    res.clearCookie("token");
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    };
+
+    // Persistent cookie (30 days)
+    if (rememberMe) {
+      cookieOptions.maxAge = 30 * 24 * 60 * 60 * 1000;
+    }
+
+    // Session cookie (removed when browser closes)
+    res.cookie("token", result.token, cookieOptions);
+
+    return res.redirect("/dashboard");
+  } catch (error) {
+    return res.render("Auth/login", {
+      title: "Login",
+      session: {},
+      success: "",
+      errors: {},
+      error: error.message,
+      old: req.body,
+    });
+  }
 });
 
 const getProfile = asyncHandler(async (req, res) => {
@@ -63,9 +85,60 @@ const getProfile = asyncHandler(async (req, res) => {
     );
 });
 
+const forgotPassword = asyncHandler(async (req, res) => {
+  try {
+    await authService.forgotPassword(req.body.email);
+
+    return res.render("Auth/forgot-password", {
+      title: "Forgot Password",
+      success: "Password reset link has been sent to your email.",
+      error: "",
+    });
+
+  } catch (error) {
+
+    return res.render("Auth/forgot-password", {
+      title: "Forgot Password",
+      success: "",
+      error: error.message,
+    });
+
+  }
+});
+const resetPassword = asyncHandler(async (req, res) => {
+  try {
+    const { token, password, confirmPassword } = req.body;
+
+    await authService.resetPassword(
+      token,
+      password,
+      confirmPassword
+    );
+
+    return res.render("Auth/login", {
+      title: "Login",
+      session: {},
+      success: "Password reset successfully. Please login.",
+      error: "",
+      errors: {},
+      old: {},
+    });
+
+  } catch (error) {
+
+    return res.render("Auth/reset-password", {
+      title: "Reset Password",
+      token: req.body.token,
+      error: error.message,
+    });
+
+  }
+});
 module.exports = {
   sendOTP,
   verifyOTP,
   login,
   getProfile,
+  forgotPassword,
+  resetPassword,
 };

@@ -7,20 +7,71 @@ const {
   MESSAGES,
 } = require("../constants");
 
-const getAllUsers = async () => {
-  return await User.findAll({
+const { Op } = require("sequelize");
+
+const getAllUsers = async (
+  page = 1,
+  limit = 10,
+  search = "",
+  role = ""
+) => {
+
+  const offset = (page - 1) * limit;
+
+  const where = {};
+
+  if (search) {
+    where[Op.or] = [
+      {
+        fullName: {
+          [Op.like]: `%${search}%`,
+        },
+      },
+      {
+        email: {
+          [Op.like]: `%${search}%`,
+        },
+      },
+    ];
+  }
+
+  const include = [
+    {
+      model: Role,
+      as: "role",
+      attributes: ["id", "name"],
+    },
+  ];
+
+  if (role) {
+    include[0].where = {
+      name: role,
+    };
+     include[0].required = true;
+  }
+
+  const { count, rows } = await User.findAndCountAll({
+    where,
+
+    include,
+
     attributes: {
       exclude: ["password", "otp", "otpExpiry"],
     },
-    include: [
-      {
-        model: Role,
-        as: "role",
-        attributes: ["id", "name"],
-      },
-    ],
+
+    limit,
+
+    offset,
+
     order: [["id", "ASC"]],
   });
+
+  return {
+    users: rows,
+    total: count,
+    current: page,
+    pages: Math.ceil(count / limit),
+  };
 };
 
 const getUserById = async (id) => {

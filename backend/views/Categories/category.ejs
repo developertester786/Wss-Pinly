@@ -1,75 +1,120 @@
-    <div class="content">
-        <div class="container-fluid">
+<div class="content">
+    <div class="container-fluid">
 
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-title-box">
-                        <h4 class="page-title"><%= title %></h4>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Pinly</a></li>
-                            <li class="breadcrumb-item active"><%= title %></li>
-                        </ol>
-                    </div>
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title"><%= title %></h4>
+
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/dashboard">Pinly</a>
+                        </li>
+
+                        <li class="breadcrumb-item">
+                            <a href="/categories">Categories</a>
+                        </li>
+
+                        <li class="breadcrumb-item active">
+                            <%= title %>
+                        </li>
+                    </ol>
                 </div>
             </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-12 d-flex align-items-center justify-content-center">
-                    <div class="col-xl-8 col-md-6">
-                        <div class="card directory-card m-b-20">
-                            <div>
-                                <form id="add_new_user" name="add_new_user" class="form-horizontal" action="/user" method="POST">
-                                    <div class="directory-content p-4">
-                                        <div class="mt-4">
-                                            <% if(success != "") {%> 
-                                                <div class="alert alert-success" role="alert">
-                                                    <strong>Done!</strong> <%= success %>
-                                                </div>
-                                            <% } %>
-                                            <% if(error != "") {%> 
-                                                <div class="alert alert-danger" role="alert">
-                                                    <strong>Error!</strong> <%= error %>
-                                                </div>
-                                            <% } %>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="mb-3">
-                                                        <label class="form-label" for="name">Name</label>
-                                                        <input type="text" class="form-control" name="name" id="name" placeholder="Name" value="">
-                                                    </div>
-                                                </div>
-                                            </div>
+        </div>
 
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label class="form-label" for="slug">Slug</label>
-                                                        <input type="text" class="form-control" name="slug" id="slug" placeholder="Slug" value="">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label class="form-label" for="parent">Parent</label>
-                                                        <select class="form-control" id="parent" name="parent">
-                                                            <option value="0">Select Parent</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-4">
-                                                <button type="submit" id="btn_submit" class="btn btn-primary w-md">Submit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+        <!-- Form -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Add Category</h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form id="categoryForm">
+
+                            <input
+                                type="hidden"
+                                id="categoryId"
+                                value=""
+                            >
+
+                            <div class="form-group mb-3">
+
+                                <label for="name">
+                                    Category Name
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    name="name"
+                                    placeholder="Enter Category Name"
+                                    value=""
+                                    autocomplete="off"
+                                    required
+                                >
+
                             </div>
-                        </div>
-                    </div> <!-- end col -->
-                </div> <!-- end col -->
-            </div> <!-- end row -->
 
+                            <div class="form-group mb-4">
 
-        </div> <!-- container-fluid -->
+                                <label for="status">
+                                    Status
+                                </label>
 
-    </div> <!-- content -->
-    <script src="/public/assets/pages/category.js"></script>
+                                <select
+                                    id="status"
+                                    name="status"
+                                    class="form-control"
+                                >
+                                    <option value="true" selected>
+                                        Active
+                                    </option>
+
+                                    <option value="false">
+                                        Inactive
+                                    </option>
+                                </select>
+
+                            </div>
+
+                            <div class="text-end">
+
+                                <a
+                                    href="/categories"
+                                    class="btn btn-secondary"
+                                >
+                                    Cancel
+                                </a>
+
+                                <button
+                                    type="submit"
+                                    id="btn_submit"
+                                    class="btn btn-primary"
+                                >
+                                    <i class="fas fa-save"></i>
+                                    Save Category
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- <script src="/public/plugins/sweet-alert2/sweetalert2.min.js"></script> -->
+<script src="/public/assets/pages/category.js"></script>

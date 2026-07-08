@@ -14,6 +14,7 @@ const { User } = require("./models");
 const crypto = require("crypto");
 const path = require('path');
 const app = express();
+const categoryRoutes = require("./routes/category.routes");
 
 app.locals = appLocals;
 
@@ -36,6 +37,7 @@ app.use("/api/roles", roleRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/businesses", businessRoutes);
+app.use("/api/categories", categoryRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

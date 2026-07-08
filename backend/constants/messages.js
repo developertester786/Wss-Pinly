@@ -47,5 +47,14 @@ const MESSAGES = {
     BUSINESSES_FETCHED: "Businesses fetched successfully.",
     BUSINESS_NOT_FOUND: "Business not found.",
     BUSINESS_ALREADY_EXISTS: "Business already exists for this user.",
+
+    // Categories
+    CATEGORY_CREATED: "Category created successfully.",
+    CATEGORY_UPDATED: "Category updated successfully.",
+    CATEGORY_DELETED: "Category deleted successfully.",
+    CATEGORY_FETCHED: "Category fetched successfully.",
+    CATEGORIES_FETCHED: "Categories fetched successfully.",
+    CATEGORY_NOT_FOUND: "Category not found.",
+    CATEGORY_ALREADY_EXISTS: "Category already exists.",
 };
 module.exports = MESSAGES;

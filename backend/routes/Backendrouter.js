@@ -2,6 +2,7 @@ const express = require('express');
 const authenticate = require("../middleware/auth.middleware");
 const optionalAuthenticate = require("../middleware/optionalAuth.middleware");
 const userController = require("../controllers/user.controller");
+const categoryService = require("../services/category.service");
 const Authrouter = express.Router();
 
 Authrouter.get("/", optionalAuthenticate, (req, res) => {
@@ -103,33 +104,44 @@ Authrouter.post("/users/add", authenticate, userController.storeUser);
 Authrouter.get("/users/edit/:id", authenticate, userController.showEditUser);
 Authrouter.post("/users/edit/:id", authenticate, userController.updateUserView);
 
-Authrouter.get('/categories',authenticate, function(req, res)
-{
-      var totalrows = 200;
-      var cur = typeof req.query.page != "undefined" ? parseInt(req.query.page) : 1;
-      var limit = cur - 1;
-      var per_page = parseInt(process.env.ADMIN_PER_PAGE_LIMIT);
-      limit = limit * per_page;
-      var totalpages = Math.ceil(totalrows/per_page) == 0 ? 1 : Math.ceil(totalrows/per_page);
-      res.render('Categories/categories',{
-            title: 'Categories',
-            usersList: '',
-            pages: totalpages,
-            current: cur,
-            paginationUrl: '',
+Authrouter.get("/categories", authenticate, async (req, res) => {
+    try {
+
+        const categories = await categoryService.getAllCategories();
+
+        res.render("Categories/categories", {
+            title: "Categories",
+            categories,
+            pages: 1,
+            current: 1,
+            paginationUrl: "",
             user: req.user
-      });
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.render("Categories/categories", {
+            title: "Categories",
+            categories: [],
+            pages: 1,
+            current: 1,
+            paginationUrl: "",
+            user: req.user
+        });
+
+    }
 });
 
-Authrouter.get('/add-category',authenticate, function(req, res)
-{
-      res.render('Categories/category',{
-            title: 'Add Category',
-            userData: '',
-            success: '',
-            error: '',
-            user: req.user
-      });
+Authrouter.get("/add-category", authenticate, (req, res) => {
+    res.render("Categories/category", {
+        title: "Add Category",
+        category: null,
+        success: "",
+        error: "",
+        user: req.user
+    });
 });
 
 module.exports = Authrouter;

@@ -13,18 +13,18 @@
     </head>
     <body>
       <div id="wrapper">
-        <% if (user.isVerified) {%>
+        <% if (user?.isVerified) {%>
           <%- include ('./Partials/Header')  %>
           <%- include ('./Partials/Sidebar')  %>
         <% } %>
-        <% if (user.isVerified) {%>
+        <% if (user?.isVerified) {%>
           <%- include ('./Partials/FooterScript')  %>
         <% } %>
         <div class="content-page">
         <%- body %>
         </div>
         <link href="/public/assets/css/admin-style.css" rel="stylesheet" type="text/css">
-        <% if (user.isVerified) {%>
+        <% if (user?.isVerified) {%>
           <%- include ('./Partials/Footer') %>
         <% } %>
       </div>

@@ -8,13 +8,14 @@ const errorHandler = require("./middleware/error.middleware");
 const authRoutes = require("./routes/auth.routes");
 const businessRoutes = require("./routes/business.routes");
 const cookieParser = require("cookie-parser");
-const authenticate = require("./middleware/auth.middleware");
-const optionalAuthenticate = require("./middleware/optionalAuth.middleware");
+const appLocals = require("./app.locals");
+const Backendrouter = require("./routes/Backendrouter");
 const { User } = require("./models");
 const crypto = require("crypto");
 const path = require('path');
-const userController = require("./controllers/user.controller");
 const app = express();
+
+app.locals = appLocals;
 
 // Middleware
 app.use(cors());
@@ -27,115 +28,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 
+// Add Authentication Route file with app
+app.use('/', Backendrouter); 
 // Routes
-app.get("/", optionalAuthenticate, (req, res) => {
 
-  if (req.user) {
-    return res.redirect("/dashboard");
-  }
-
-  res.render("Auth/login", {
-    user: "",  
-    title: "Login",
-    session: {},
-    success: "",
-    errors: {},
-    error: "",
-    old: {},
-  });
-
-});
-
-app.get("/logout", (req, res) => {
-
-    res.clearCookie("token");
-
-    return res.redirect("/");
-
-});
-
-app.get("/users", authenticate, userController.listUsers);
-
-app.get(
-  "/dashboard",
-  authenticate,
-  (req, res) => {
-    res.render("Dashboard/dashboard", {
-      title: "Dashboard",
-      user: req.user,
-    });
-  }
-);
-
-// app.get("/forgot", (req, res) => {
-//   res.render("Auth/pages_recoverpw", {
-//     title: "Forgot Password",
-//     error: "",
-//     success: "",
-//   });
-// });
-
-app.get("/forgot-password", (req, res) => {
-    res.render("Auth/forgot-password", {
-        title: "Forgot Password",
-        success: "",
-        error: ""
-    });
-});
-
-app.get("/reset-password/:token", async (req, res) => {
-  try {
-
-    // Hash the token received from the URL
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(req.params.token)
-      .digest("hex");
-
-    // Find user with this hashed token
-    const user = await User.findOne({
-      where: {
-        resetPasswordToken: hashedToken,
-      },
-    });
-
-    if (!user) {
-     return res.render("Auth/forgot-password", {
-    title: "Forgot Password",
-    success: "",
-    error: "Invalid or expired reset link. Please request a new password reset link.",
-});
-    }
-
-   if (
-  !user.resetPasswordExpires ||
-  user.resetPasswordExpires < new Date()
-) {
-      return res.render("Auth/forgot-password", {
-    title: "Forgot Password",
-    success: "",
-    error: "Reset link has expired. Please request a new one."
-});
-    }
-
-    res.render("Auth/reset-password", {
-      title: "Reset Password",
-      token: req.params.token, // Original token goes to hidden input
-      error: "",
-    });
-
-  } catch (error) {
-    console.error(error);
-    return res.redirect("/");
-  }
-});
-
-
-
-app.get("/users/add", authenticate, userController.showAddUser);
-app.post("/users/add", authenticate, userController.storeUser);
-app.get("/users/edit/:id", authenticate, userController.showEditUser);
-app.post("/users/edit/:id", authenticate, userController.updateUserView);
 app.use("/api/roles", roleRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
